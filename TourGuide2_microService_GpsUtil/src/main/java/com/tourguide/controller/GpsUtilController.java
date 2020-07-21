@@ -23,6 +23,11 @@ public class GpsUtilController {
 	@Autowired
 	MicroServiceUserProxy userProxy;
 
+	@GetMapping("/getAttractions")
+	public List<Attraction> getAttractions() {
+		return gpsUtilService.getAttractions();
+	}
+
 	// TODO: Change this method to no longer return a List of Attractions.
 	// Instead: Get the closest five tourist attractions to the user - no matter how
 	// far away they are.
@@ -45,11 +50,6 @@ public class GpsUtilController {
 	public String get5NearbyAttractions(@RequestParam String userName) {
 		VisitedLocation visitedLocation = userProxy.getUserLocation(userName);
 		return JsonStream.serialize(gpsUtilService.get5NearByAttractions(visitedLocation));
-	}
-
-	@GetMapping("/getAttractions")
-	public List<Attraction> getAttractions() {
-		return gpsUtilService.getAttractions();
 	}
 
 }

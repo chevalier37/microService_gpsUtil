@@ -17,8 +17,11 @@ import gpsUtil.location.VisitedLocation;
 @Service
 public class GpsUtilService {
 
-	@Autowired
-	GpsUtil gpsUtil;
+	private final GpsUtil gpsUtil;
+
+	public GpsUtilService(GpsUtil gpsUtil) {
+		this.gpsUtil = gpsUtil;
+	}
 
 	@Autowired
 	MicroServiceRewardProxy microServiceRewardProxy;
@@ -29,7 +32,7 @@ public class GpsUtilService {
 
 	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
 		List<Attraction> nearbyAttractions = new ArrayList<>();
-		for (Attraction attraction : gpsUtil.getAttractions()) {
+		for (gpsUtil.location.Attraction attraction : gpsUtil.getAttractions()) {
 			if (microServiceRewardProxy.isWithinAttractionProximity(attraction, visitedLocation.location)) {
 				nearbyAttractions.add(attraction);
 			}
@@ -41,7 +44,7 @@ public class GpsUtilService {
 	public TreeMap<Double, Attraction> get5NearByAttractions(VisitedLocation visitedLocation) {
 		TreeMap<Double, Attraction> nearbyAttractions = new TreeMap<>();
 		TreeMap<Double, Attraction> orderedNearbyAttractions = new TreeMap<>();
-		for (Attraction attraction : gpsUtil.getAttractions()) {
+		for (gpsUtil.location.Attraction attraction : gpsUtil.getAttractions()) {
 			double distance = microServiceRewardProxy.getDistanceMiles(attraction, visitedLocation.location);
 			nearbyAttractions.put(distance, attraction);
 			nearbyAttractions.keySet();
