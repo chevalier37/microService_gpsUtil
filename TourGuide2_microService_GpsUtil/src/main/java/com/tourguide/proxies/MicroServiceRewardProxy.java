@@ -1,19 +1,20 @@
 package com.tourguide.proxies;
 
+import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import gpsUtil.location.Attraction;
-import gpsUtil.location.Location;
+import com.tourguide.model.AttractionAndLocation;
 
-@FeignClient(name = "microservice-reward", url = "localhost:9003")
+@FeignClient(name = "microservice-reward")
+@RibbonClient(name = "microservice-reward")
 public interface MicroServiceRewardProxy {
 
 	@GetMapping("/isWithinAttractionProximity")
-	boolean isWithinAttractionProximity(@RequestParam Attraction attraction, @RequestParam Location location);
+	boolean isWithinAttractionProximity(@RequestBody AttractionAndLocation request);
 
 	@GetMapping("/getDistanceMiles")
-	double getDistanceMiles(@RequestParam Attraction attraction, @RequestParam Location location);
+	double getDistanceMiles(@RequestBody AttractionAndLocation request);
 
 }

@@ -8,6 +8,7 @@ import java.util.TreeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tourguide.model.AttractionAndLocation;
 import com.tourguide.proxies.MicroServiceRewardProxy;
 
 import gpsUtil.GpsUtil;
@@ -32,8 +33,12 @@ public class GpsUtilService {
 
 	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
 		List<Attraction> nearbyAttractions = new ArrayList<>();
-		for (gpsUtil.location.Attraction attraction : gpsUtil.getAttractions()) {
-			if (microServiceRewardProxy.isWithinAttractionProximity(attraction, visitedLocation.location)) {
+
+		for (Attraction attraction : gpsUtil.getAttractions()) {
+			AttractionAndLocation attractionAndLocation = new AttractionAndLocation();
+			attractionAndLocation.setAttraction(attraction);
+			attractionAndLocation.setLocation(visitedLocation.location);
+			if (microServiceRewardProxy.isWithinAttractionProximity(attractionAndLocation)) {
 				nearbyAttractions.add(attraction);
 			}
 		}
@@ -44,8 +49,11 @@ public class GpsUtilService {
 	public TreeMap<Double, Attraction> get5NearByAttractions(VisitedLocation visitedLocation) {
 		TreeMap<Double, Attraction> nearbyAttractions = new TreeMap<>();
 		TreeMap<Double, Attraction> orderedNearbyAttractions = new TreeMap<>();
-		for (gpsUtil.location.Attraction attraction : gpsUtil.getAttractions()) {
-			double distance = microServiceRewardProxy.getDistanceMiles(attraction, visitedLocation.location);
+		for (Attraction attraction : gpsUtil.getAttractions()) {
+			AttractionAndLocation attractionAndLocation = new AttractionAndLocation();
+			attractionAndLocation.setAttraction(attraction);
+			attractionAndLocation.setLocation(visitedLocation.location);
+			double distance = microServiceRewardProxy.getDistanceMiles(attractionAndLocation);
 			nearbyAttractions.put(distance, attraction);
 			nearbyAttractions.keySet();
 		}
