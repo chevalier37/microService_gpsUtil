@@ -8,11 +8,11 @@ import java.util.TreeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tourguide.model.Attraction;
 import com.tourguide.model.AttractionAndLocation;
 import com.tourguide.proxies.MicroServiceRewardProxy;
 
 import gpsUtil.GpsUtil;
-import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 
 @Service
@@ -28,6 +28,13 @@ public class GpsUtilService {
 	MicroServiceRewardProxy microServiceRewardProxy;
 
 	public List<Attraction> getAttractions() {
+		List<gpsUtil.location.Attraction> gpsAttraction = gpsUtil.getAttractions();
+
+		// faire stream
+		for (gpsUtil.location.Attraction attraction : gpsAttraction) {
+			Attraction modelAttraction = new Attraction(attraction.attractionName, null, null, 0, 0);
+		}
+
 		return gpsUtil.getAttractions();
 	}
 
