@@ -2,7 +2,6 @@ package com.tourguide.service;
 
 import static java.util.stream.Collectors.toList;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -34,22 +33,9 @@ public class GpsUtilService {
 	public List<Attraction> getAttractions() {
 		List<gpsUtil.location.Attraction> gpsAttraction = gpsUtil.getAttractions();
 
-		List<Attraction> modelAttraction = gpsAttraction.stream()
-				.map(attraction -> new Attraction(attraction.attractionName, attraction.city, attraction.state,
-						attraction.latitude, attraction.longitude))
-				.collect(toList());
+		return gpsAttraction.stream().map(attraction -> new Attraction(attraction.attractionName, attraction.city,
+				attraction.state, attraction.latitude, attraction.longitude)).collect(toList());
 
-		return modelAttraction;
-	}
-
-	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
-		List<Attraction> nearbyAttractions = new ArrayList<>();
-		for (Attraction attraction : getAttractions()) {
-			if (isWithinAttractionProximity(attraction, visitedLocation.location)) {
-				nearbyAttractions.add(attraction);
-			}
-		}
-		return nearbyAttractions;
 	}
 
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
