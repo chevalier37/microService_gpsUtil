@@ -15,4 +15,9 @@ public class VisitedLocation {
 		this.timeVisited = timeVisited;
 	}
 
+	@Override
+	public String toString() {
+		return "VisitedLocation [userId=" + userId + ", location=" + location + ", timeVisited=" + timeVisited + "]";
+	}
+
 }

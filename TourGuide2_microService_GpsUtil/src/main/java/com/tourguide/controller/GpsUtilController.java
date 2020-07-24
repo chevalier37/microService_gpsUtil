@@ -1,18 +1,17 @@
 package com.tourguide.controller;
 
 import java.util.List;
+import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jsoniter.output.JsonStream;
+import com.tourguide.model.Attraction;
+import com.tourguide.model.VisitedLocation;
 import com.tourguide.proxies.MicroServiceUserProxy;
 import com.tourguide.service.GpsUtilService;
-
-import gpsUtil.location.Attraction;
-import gpsUtil.location.VisitedLocation;
 
 @RestController
 public class GpsUtilController {
@@ -40,16 +39,16 @@ public class GpsUtilController {
 	// The reward points for visiting each Attraction.
 	// Note: Attraction reward points can be gathered from RewardsCentral
 	@GetMapping("/getNearbyAttractions")
-	public String getNearbyAttractions(@RequestParam String userName) {
+	public List<Attraction> getNearbyAttractions(@RequestParam String userName) {
 		VisitedLocation visitedLocation = userProxy.getUserLocation(userName);
-		return JsonStream.serialize(gpsUtilService.getNearByAttractions(visitedLocation));
+		return gpsUtilService.getNearByAttractions(visitedLocation);
 	}
 
 	// created by JB
 	@GetMapping("/get5NearbyAttractions")
-	public String get5NearbyAttractions(@RequestParam String userName) {
+	public TreeMap<Double, Attraction> get5NearbyAttractions(@RequestParam String userName) {
 		VisitedLocation visitedLocation = userProxy.getUserLocation(userName);
-		return JsonStream.serialize(gpsUtilService.get5NearByAttractions(visitedLocation));
+		return gpsUtilService.get5NearByAttractions(visitedLocation);
 	}
 
 }

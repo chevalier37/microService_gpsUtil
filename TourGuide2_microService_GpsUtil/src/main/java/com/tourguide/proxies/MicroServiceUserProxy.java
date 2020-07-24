@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tourguide.model.User;
-
-import gpsUtil.location.VisitedLocation;
+import com.tourguide.model.VisitedLocation;
 
 @FeignClient(name = "microservice-user")
 @RibbonClient(name = "microservice-user")

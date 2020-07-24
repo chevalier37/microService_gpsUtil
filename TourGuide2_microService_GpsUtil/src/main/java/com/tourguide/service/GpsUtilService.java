@@ -1,5 +1,7 @@
 package com.tourguide.service;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,16 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tourguide.model.Attraction;
-import com.tourguide.model.AttractionAndLocation;
+import com.tourguide.model.Location;
+import com.tourguide.model.VisitedLocation;
 import com.tourguide.proxies.MicroServiceRewardProxy;
 
 import gpsUtil.GpsUtil;
-import gpsUtil.location.VisitedLocation;
 
 @Service
 public class GpsUtilService {
 
 	private final GpsUtil gpsUtil;
+	private int attractionProximityRange = 200;
+	private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
 
 	public GpsUtilService(GpsUtil gpsUtil) {
 		this.gpsUtil = gpsUtil;
@@ -30,37 +34,53 @@ public class GpsUtilService {
 	public List<Attraction> getAttractions() {
 		List<gpsUtil.location.Attraction> gpsAttraction = gpsUtil.getAttractions();
 
-		// faire stream
-		for (gpsUtil.location.Attraction attraction : gpsAttraction) {
-			Attraction modelAttraction = new Attraction(attraction.attractionName, null, null, 0, 0);
-		}
+		List<Attraction> modelAttraction = gpsAttraction.stream()
+				.map(attraction -> new Attraction(attraction.attractionName, attraction.city, attraction.state,
+						attraction.latitude, attraction.longitude))
+				.collect(toList());
 
-		return gpsUtil.getAttractions();
+		return modelAttraction;
 	}
 
 	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
 		List<Attraction> nearbyAttractions = new ArrayList<>();
-
-		for (Attraction attraction : gpsUtil.getAttractions()) {
-			AttractionAndLocation attractionAndLocation = new AttractionAndLocation();
-			attractionAndLocation.setAttraction(attraction);
-			attractionAndLocation.setLocation(visitedLocation.location);
-			if (microServiceRewardProxy.isWithinAttractionProximity(attractionAndLocation)) {
+		for (Attraction attraction : getAttractions()) {
+			if (isWithinAttractionProximity(attraction, visitedLocation.location)) {
 				nearbyAttractions.add(attraction);
 			}
 		}
 		return nearbyAttractions;
 	}
 
+	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
+		return getDistance(attraction, location) > attractionProximityRange ? false : true;
+	}
+
+	public double getDistance(Location loc1, Location loc2) {
+		double lat1 = Math.toRadians(loc1.latitude);
+		double lon1 = Math.toRadians(loc1.longitude);
+		double lat2 = Math.toRadians(loc2.latitude);
+		double lon2 = Math.toRadians(loc2.longitude);
+
+		double angle = Math
+				.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon1 - lon2));
+
+		double nauticalMiles = 60 * Math.toDegrees(angle);
+		double statuteMiles = STATUTE_MILES_PER_NAUTICAL_MILE * nauticalMiles;
+		return statuteMiles;
+	}
+
+	// created by JB
+	public double getDistanceMiles(Attraction attraction, Location location) {
+		return getDistance(attraction, location);
+	}
+
 	// created by JB
 	public TreeMap<Double, Attraction> get5NearByAttractions(VisitedLocation visitedLocation) {
 		TreeMap<Double, Attraction> nearbyAttractions = new TreeMap<>();
 		TreeMap<Double, Attraction> orderedNearbyAttractions = new TreeMap<>();
-		for (Attraction attraction : gpsUtil.getAttractions()) {
-			AttractionAndLocation attractionAndLocation = new AttractionAndLocation();
-			attractionAndLocation.setAttraction(attraction);
-			attractionAndLocation.setLocation(visitedLocation.location);
-			double distance = microServiceRewardProxy.getDistanceMiles(attractionAndLocation);
+		for (Attraction attraction : getAttractions()) {
+			double distance = getDistanceMiles(attraction, visitedLocation.location);
 			nearbyAttractions.put(distance, attraction);
 			nearbyAttractions.keySet();
 		}
