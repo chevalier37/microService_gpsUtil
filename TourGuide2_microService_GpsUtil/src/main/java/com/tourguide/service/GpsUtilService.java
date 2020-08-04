@@ -56,12 +56,10 @@ public class GpsUtilService {
 		return statuteMiles;
 	}
 
-	// created by JB
 	public double getDistanceMiles(Attraction attraction, Location location) {
 		return getDistance(attraction, location);
 	}
 
-	// created by JB
 	public TreeMap<Double, Attraction> get5NearByAttractions(VisitedLocation visitedLocation) {
 		TreeMap<Double, Attraction> nearbyAttractions = new TreeMap<>();
 		TreeMap<Double, Attraction> orderedNearbyAttractions = new TreeMap<>();
