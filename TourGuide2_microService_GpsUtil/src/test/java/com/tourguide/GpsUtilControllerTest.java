@@ -31,12 +31,15 @@ public class GpsUtilControllerTest {
 
 	@Test
 	public void getAttractionsTest() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.get("/getAttractions")).andDo(print()).andExpect(status().isOk());
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/gpsutil/getAttractions")).andDo(print())
+				.andExpect(status().isOk());
 	}
 
 	@Test
 	public void get5NearbyAttractionsTest() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.get("/get5NearbyAttractions").param("userName", "internalUser1"))
+		this.mockMvc
+				.perform(
+						MockMvcRequestBuilders.get("/gpsutil/get5NearbyAttractions").param("userName", "internalUser1"))
 				.andDo(print()).andExpect(status().isOk());
 	}
 
