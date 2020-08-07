@@ -13,10 +13,10 @@ import com.tourguide.model.VisitedLocation;
 @RibbonClient(name = "microservice-user")
 public interface MicroServiceUserProxy {
 
-	@GetMapping("/getUser/{userName}")
+	@GetMapping("user/getUser/{userName}")
 	User getUser(@PathVariable("userName") String userName);
 
-	@GetMapping("/getUserLocation")
+	@GetMapping("user/getUserLocation")
 	VisitedLocation getUserLocation(@RequestParam String userName);
 
 }
