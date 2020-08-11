@@ -26,9 +26,9 @@ public class GpsUtilTest {
 	@Test
 	public void get5NearByAttractionsTest() {
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		VisitedLocation visitedLocation = new VisitedLocation(user.getUserId(), new Location(20.00, 200.00),
-				new Date());
-		Map<Double, Attraction> attractions = gpsUtilService.get5NearByAttractions(visitedLocation);
+		VisitedLocation visitedLocation = new VisitedLocation(user.getUserId(), new Location(20.00, 200.00), new Date(),
+				0);
+		Map<Double, Attraction> attractions = gpsUtilService.get5NearByAttractions(visitedLocation, "jon");
 		assertEquals(5, attractions.size());
 	}
 

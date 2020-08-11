@@ -8,6 +8,7 @@ public class Attraction extends Location {
 	public final String city;
 	public final String state;
 	public final UUID attractionId;
+	public int point;
 
 	public Attraction(String attractionName, String city, String state, double latitude, double longitude) {
 		super(latitude, longitude);

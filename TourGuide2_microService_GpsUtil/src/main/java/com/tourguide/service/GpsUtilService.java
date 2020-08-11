@@ -28,7 +28,7 @@ public class GpsUtilService {
 	}
 
 	@Autowired
-	MicroServiceRewardProxy microServiceRewardProxy;
+	MicroServiceRewardProxy rewardProxy;
 
 	public List<Attraction> getAttractions() {
 		List<gpsUtil.location.Attraction> gpsAttraction = gpsUtil.getAttractions();
@@ -60,12 +60,14 @@ public class GpsUtilService {
 		return getDistance(attraction, location);
 	}
 
-	public TreeMap<Double, Attraction> get5NearByAttractions(VisitedLocation visitedLocation) {
+	public TreeMap<Double, Attraction> get5NearByAttractions(VisitedLocation visitedLocation, String userName) {
 		TreeMap<Double, Attraction> nearbyAttractions = new TreeMap<>();
 		TreeMap<Double, Attraction> orderedNearbyAttractions = new TreeMap<>();
 		for (Attraction attraction : getAttractions()) {
+			int point = rewardProxy.getRewardPoints(userName, attraction);
+			attraction.point = point;
 			double distance = getDistanceMiles(attraction, visitedLocation.location);
-			nearbyAttractions.put(distance, attraction);
+			nearbyAttractions.put((double) Math.round(distance / 1000), attraction);
 			nearbyAttractions.keySet();
 		}
 		int i = 0;
